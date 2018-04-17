@@ -7,7 +7,7 @@
 %option noyywrap
 
 %{
-    #include "CILisp.h"
+    #include "SimpleLisp.h"
 %}
 
 digit [0-9]

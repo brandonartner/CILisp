@@ -4,7 +4,7 @@
 * Date: 03/26/2015
 */
 
-#include "CILisp.h"
+#include "SimpleLisp.h"
 
 int main(void)
 {
@@ -33,6 +33,7 @@ int resolveFunc(char *func)
    yyerror("invalid function"); // paranoic -- should never happen
    return -1;
 }
+
 
 // create a node for a number
 AST_NODE *number(double value)
