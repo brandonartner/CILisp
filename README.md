@@ -8,7 +8,7 @@ sudo apt-get install flex bison
 ```
 2. Run the build file
 ```
-bash build.sh
+./build.sh
 ```
 3. Excecute l8t10
 ```
