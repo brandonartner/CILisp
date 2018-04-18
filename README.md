@@ -1,5 +1,5 @@
 # Simple Lisp
-Compiler for a made up language, Simple Lisp, for a class project, that I am trying to finish dispite being already submited. Written in C. 
+Compiler for a simplified version of Lisp. Uses Bison for parsing and Flex for scanning. 
 
 Instructions for Ubuntu:
 1. Install bison and flex
