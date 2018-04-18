@@ -1,5 +1,6 @@
-(add ((let (real abcd 1)) (sub -3 abcd)) 4)
-(mult ((let (real a 1) (real b 2)) (add a b)) (sqrt 2))
-(add ((let (real a ((let (real b 2)) (mult b (sqrt 10))))) (div a 2)) ((let (real c 5)) (sqrt c)))
-((let (real first (sub 5 1)) (real second 2)) (add (pow 2 first) (sqrt second)))
+(add (print ((let (real abcd 1)) (sub -3 abcd))) (cond (equal 1 1) 4 5))
+(add (print ((let (real abcd 1)) (sub -3 abcd))) (cond (equal 1 0) 4 5))
+(cond (smaller (add 3 (sqrt 4)) (hypot 2 5)) (print (mult ((let (real a 1) (real b 2)) (add a b)) (sqrt 2))) (print 20) )
+(add ((let (real a ((let (real b 2)) (mult b (print (sqrt 10)))))) (print (div a 2))) ((let (real c 5)) (cond (remainder c 2) (abs c) (sqrt c))))
+((let (real first (print (sub 5 1))) (real second 2)) (add (pow 2 first) (sqrt second)))
 quit
