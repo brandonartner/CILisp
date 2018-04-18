@@ -1,6 +1,6 @@
 /*
 * Name: Brandon Artner
-* Lab: Lab 8 Task 8
+* Lab: Lab 8 Task 10
 * Date: 03/26/2015
 */
 
@@ -19,7 +19,7 @@ int yyparse(void);
 int yylex(void);
 void yyerror(char *);
 
-typedef enum { NUM_TYPE, SYMB_TYPE, FUNC_TYPE, LET_ELEM_TYPE, COND_TYPE } AST_NODE_TYPE;
+typedef enum { NUM_TYPE, SYMB_TYPE, FUNC_TYPE, LET_ELEM_TYPE, COND_TYPE, USER_FUNC_TYPE } AST_NODE_TYPE;
 typedef enum { UNDEC_VAR, INT_VAR, REAL_VAR } VAR_TYPE;
 
 typedef struct
@@ -44,6 +44,7 @@ typedef struct
 typedef struct 
 {
    char *name;
+   struct ast_node *next;
 }SYMBOL_AST_NODE;
 
 typedef struct 
@@ -52,6 +53,13 @@ typedef struct
    struct ast_node *ifTrue;
    struct ast_node *ifFalse;
 }COND_AST_NODE;
+
+typedef struct 
+{
+   char *name;
+   struct ast_node *args;
+   struct ast_node *value;
+}USER_FUNC_AST_NODE;
 
 typedef struct ast_node
 {
@@ -64,8 +72,10 @@ typedef struct ast_node
       FUNCTION_AST_NODE function;
       LET_ELEM_AST_NODE letElem;
       COND_AST_NODE cond;
+      USER_FUNC_AST_NODE userFunc;
    } data;
    struct ast_node *varTable;
+   struct ast_node *exprTable;
 } AST_NODE;
 
 AST_NODE *number(double value);
@@ -73,8 +83,11 @@ AST_NODE *symbol(char *name);
 AST_NODE *let(AST_NODE *symbList, AST_NODE *s_expr);
 AST_NODE *let_elem(int varTypeNum, char *name,struct ast_node *value);
 AST_NODE *let_list(AST_NODE *first, AST_NODE *last);
-AST_NODE *function(char *funcName, AST_NODE *op1, AST_NODE *op2);
+AST_NODE *function(char *funcName, AST_NODE *ops);
 AST_NODE *cond(struct ast_node *newCondition, struct ast_node *newThen, struct ast_node *newElse);
+AST_NODE *s_expr_list(struct ast_node *s_exprList, struct ast_node *newS_expr);
+AST_NODE *args_list(struct ast_node *argList, struct ast_node *newArg);
+AST_NODE *let_elem_func(char *name, struct ast_node *args, struct ast_node *value);
 void freeNode(AST_NODE *p);
 //void freeVarTable(AST_NODE *p);
 struct ast_node* combineTables(struct ast_node* childTable, struct ast_node* parentTable);

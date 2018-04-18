@@ -1,6 +1,6 @@
 /*
 * Name: Brandon Artner
-* Lab: Lab 8 Task 8
+* Lab: Lab 8 Task 10
 * Date: 03/26/2015
 */
 
@@ -20,7 +20,7 @@ void yyerror(char *s)
 // find out which function it is
 int resolveFunc(char *func)
 {
-   char *funcs[] = { "neg", "abs", "exp", "sqrt", "add", "sub", "mult", "div", "remainder", "log", "pow", "max", "min", "exp2", "cbrt", "hypot", "print", "equal", "smaller", "larger",""};
+   char *funcs[] = { "neg", "abs", "exp", "sqrt", "add", "sub", "mult", "div", "remainder", "log", "pow", "max", "min", "exp2", "cbrt", "hypot", "rand", "read", "print", "equal", "smaller", "larger",""};
    
    int i = 0;
    while (funcs[i][0] !='\0')
@@ -33,6 +33,7 @@ int resolveFunc(char *func)
    yyerror("invalid function"); // paranoic -- should never happen
    return -1;
 }
+
 
 // create a node for a number
 AST_NODE *number(double value)
@@ -67,9 +68,43 @@ AST_NODE *symbol(char *name)
        // printf("the type is: %d\n", p->type);
 
     p->data.symbol.name = name;
-    //printf("mainc: symbol-%s\n", p->data.symbol.name);
+    printf("mainc: symbol-%s\n", p->data.symbol.name);
 
     return p;
+}
+
+
+AST_NODE *s_expr_list(struct ast_node *s_exprList, struct ast_node *newS_expr)
+{
+    newS_expr->exprTable = s_exprList;
+
+    return newS_expr;
+}
+
+AST_NODE *args_list(struct ast_node *argList, struct ast_node *newArg)
+{
+  newArg->data.symbol.next = argList;
+
+  return newArg;
+}
+
+AST_NODE *let_elem_func(char *name, struct ast_node *args, struct ast_node *value)
+{
+    AST_NODE *p;
+    size_t nodeSize;
+
+    // allocate space for the fixed sie and the variable part (union)
+    nodeSize = sizeof(AST_NODE) + sizeof(USER_FUNC_AST_NODE);
+    if ((p = malloc(nodeSize)) == NULL)
+        yyerror("out of memory");
+
+    // Sets up the function 
+    p->data.userFunc.name = name;
+    p->data.userFunc.args = args;
+    p->data.userFunc.value = value;
+
+    return p;
+
 }
 
 AST_NODE *let_elem(int varTypeNum, char *newName, struct ast_node *newValue)
@@ -153,7 +188,7 @@ struct ast_node* resolveSymb(int checkFlag, char *symbName, struct ast_node *sym
     if(retVal != NULL)
       retVal->varType = currNode->varType;
 
-    if (!isFound && !checkFlag)
+    if (!isFound)
         printf("\nSymbol: %s not defined\n", symbName);
 
     return retVal;
@@ -162,18 +197,18 @@ struct ast_node* resolveSymb(int checkFlag, char *symbName, struct ast_node *sym
 struct ast_node* combineTables(struct ast_node* childTable, struct ast_node* parentTable)
 {
     if(parentTable == NULL){
-      //printf("\nparent tab is null\n");
+      printf("\nparent tab is null\n");
       return childTable;
     }
     if(childTable == NULL){
-      //printf("\nchild tab is null\n");
+      printf("\nchild tab is null\n");
       return parentTable;
     }
 
     struct ast_node *currNode = childTable;
 
     while(currNode->data.letElem.next != NULL){
-      //printf("\ntraversing list%s\n", currNode->data.letElem.name);
+      printf("\ntraversing list%s\n", currNode->data.letElem.name);
       currNode = currNode->data.letElem.next;
     }
 
@@ -183,7 +218,7 @@ struct ast_node* combineTables(struct ast_node* childTable, struct ast_node* par
 }
 
 // create a node for a function
-AST_NODE *function(char *funcName, AST_NODE *op1, AST_NODE *op2)
+AST_NODE *function(char *funcName, AST_NODE *ops)
 {
     AST_NODE *p;
     size_t nodeSize;
@@ -195,8 +230,8 @@ AST_NODE *function(char *funcName, AST_NODE *op1, AST_NODE *op2)
 
     p->type = FUNC_TYPE;
     p->data.function.name = funcName;
-    p->data.function.op1 = op1;
-    p->data.function.op2 = op2;
+    p->data.function.op1 = ops;
+    p->data.function.op2 = ops->exprTable;
 
     return p;
 }
@@ -274,7 +309,8 @@ double eval(AST_NODE *p)
   if(p->type == FUNC_TYPE)
   {
 
-    p->data.function.op1->varTable = combineTables(p->data.function.op1->varTable, p->varTable);
+    if(p->data.function.op1 != NULL)
+      p->data.function.op1->varTable = combineTables(p->data.function.op1->varTable, p->varTable);
     if(p->data.function.op2 != NULL)
       p->data.function.op2->varTable = combineTables(p->data.function.op2->varTable, p->varTable);
     return calc(p->data.function.name, eval(p->data.function.op1), eval(p->data.function.op2));
@@ -350,11 +386,13 @@ double calc(char *func, double op1, double op2)
         case 13:retVal = exp2(op1); break;
         case 14:retVal = cbrt(op1); break;
         case 15:retVal = hypot(op1,op2); break;
-        case 16:printf("%f\n", op1);
-        case 20:retVal = op1; break;
-        case 17:retVal = (op1 == op2);break;
-        case 18:retVal = (op1 < op2);break;
-        case 19:retVal = (op1 > op2);break;
+        case 16:retVal = rand();break;
+        case 17:scanf("%lf",&retVal);break;
+        case 18:printf("%f\n", op1);
+        case 22:retVal = op1; break;
+        case 19:retVal = (op1 == op2);break;
+        case 20:retVal = (op1 < op2);break;
+        case 21:retVal = (op1 > op2);break;
         default:
           break;
     }
