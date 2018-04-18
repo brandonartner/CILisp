@@ -1,5 +1,5 @@
 # Simple Lisp
-Compiler for a made up language, Simple Lisp, for a class project, that I am trying to finish dispite being already submited. Written in C.
+Compiler for a made up language, Simple Lisp, for a class project, that I am trying to finish dispite being already submited. Written in C. 
 
 Instructions for Ubuntu:
 1. Install bison and flex
@@ -17,19 +17,19 @@ sudo apt-get install flex bison
 
 ## Language Grammar:
 
-program ::= program s-expr
-s-expr ::= number | symbol | ( func s-expr_list ) | ( symbol s-expr_list ) | ( ( let let_list ) s_expr ) | ( cond s_expr s_expr s_expr )
-s_expr_list ::= | s_expr_list s_expr
-let_list ::= let_elem | let_list let_elem
-let_elem ::= (symbol s_expr) ( type symbol s_expr ) | ( symbol ( arg_list ) s-expr )
-type ::= integer | real
-arg_list ::= symbol arg_list |
-symbol ::= letter+
-letter ::= [a-zA-Z]
-number ::= [ + | - ] digit+ [ . digit+ ] 
-digit ::= 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
+program ::= program s-expr  
+s-expr ::= number | symbol | ( func s-expr_list ) | ( symbol s-expr_list ) | ( ( let let_list ) s_expr ) | ( cond s_expr s_expr s_expr )  
+s_expr_list ::= | s_expr_list s_expr  
+let_list ::= let_elem | let_list let_elem  
+let_elem ::= (symbol s_expr) ( type symbol s_expr ) | ( symbol ( arg_list ) s-expr )  
+type ::= integer | real  
+arg_list ::= symbol arg_list |  
+symbol ::= letter+  
+letter ::= [a-zA-Z]  
+number ::= [ + | - ] digit+ [ . digit+ ]   
+digit ::= 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9  
 
 ## Functions:
 
-"neg"|"abs"|"exp"|"sqrt"|"add"|"sub"|"mult"|"div"|"remainder"|"log"|"pow"|"max"|"min"|"exp2"|"cbrt"|"hypot"|"print"|"equal"|"smaller"|"larger"
+"neg"|"abs"|"exp"|"sqrt"|"add"|"sub"|"mult"|"div"|"remainder"|"log"|"pow"|"max"|"min"|"exp2"|"cbrt"|"hypot"|"print"|"equal"|"smaller"|"larger"  
 
